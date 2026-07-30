@@ -1,15 +1,15 @@
-function cav24PerimData = importPerimFile(filename, dataLines)
+function cav24PerimData = import_perimFile(filename, dataLines)
 %IMPORTFILE Import data from a text file
-%  CAV24PERIMDATA = IMPORTPERIMFILE(FILENAME) reads data from text file
+%  CAV24PERIMDATA = IMPORT_PERIMFILE(FILENAME) reads data from text file
 %  FILENAME for the default selection.  Returns the numeric data.
 %
-%  CAV24PERIMDATA = IMPORTPERIMFILE(FILE, DATALINES) reads data for the
+%  CAV24PERIMDATA = IMPORT_PERIMFILE(FILE, DATALINES) reads data for the
 %  specified row interval(s) of text file FILENAME. Specify DATALINES as
 %  a positive scalar integer or a N-by-2 array of positive scalar
 %  integers for dis-contiguous row intervals.
 %
 %  Example:
-%  cav24PerimData = importPerimFile("/projectnb/turbomac/REBECCA/cavSym2024/areaPerimData/cav24PerimData.csv", [2, 502]);
+%  cav24PerimData = import_perimFile("/projectnb/turbomac/REBECCA/cavSym2024/areaPerimData/cav24PerimData.csv", [2, 502]);
 %
 %  See also READTABLE.
 %
