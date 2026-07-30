@@ -1,0 +1,61 @@
+%% Rebecca Shannon
+% load single line grahp data from cavity tutorials and plot
+
+% cd /projectnb/am423/rshannon/cavityTuts
+
+
+%% Load .xy files
+cd /projectnb/am423/rshannon/turbCav/
+N = [40, 80]%, 120, 160];
+
+
+for i = 1:length(N)
+
+    dir = sprintf('icoX%0.0fRe10',N(i));
+    cd(strcat(dir,'/postProcessing/singleGraphX/'));
+    
+    Mut1 = readmatrix("0.4/line_U.xy",'FileType','text'); % Mu = [y Ux Uy Uz]
+    Mpt1 = readmatrix("0.4/line_p.xy",'FileType','text'); % Mp = [y p]
+
+    Mut2 = readmatrix("0.5/line_U.xy",'FileType','text'); % Mu = [y Ux Uy Uz]
+    Mpt2 = readmatrix("0.5/line_p.xy",'FileType','text'); % Mp = [y p]
+
+    y = Mu(:,1);
+    dUx(:,i) = Mut2(:,2) - Mut1(:,2);
+    dUy(:,i) = Mut2(:,3) - Mut1(:,3);
+    dp(:,i) = Mpt2(:,2) - Mpt1(:,2);
+
+    cd ../../../../
+
+end
+
+%% Residual
+
+
+
+%% Plotting
+%
+% 
+% figure
+% plot(y,Ux(:,1),y,Ux(:,2))%,y,Ux(:,3),y,Ux(:,4))
+% xlabel('y')
+% ylabel('Ux')
+% grid on
+% title('Velocity (u) at x = 0.1')%, t = 0.5')
+% legend('20 cells','30 cells','40 cells')
+% 
+% figure
+% plot(y,Uy(:,1),y,Uy(:,2))%,y,Uy(:,3),y,Uy(:,4))
+% xlabel('y')
+% ylabel('Uy')
+% grid on
+% title('Velocity (v) at x = 0.1')%, t = 0.5')
+% legend('20 cells','30 cells','40 cells')
+% 
+% figure
+% plot(y,p(:,1),y,p(:,2))%,y,p(:,3),y,p(:,4))
+% xlabel('y')
+% ylabel('p')
+% grid on
+% title('Pressure (p) at x = 0.1')%, t = 0.5')
+% legend('20 cells','30 cells','40 cells')
