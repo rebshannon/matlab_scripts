@@ -76,7 +76,10 @@ for i = 1:length(dirs)
             data_struct(count).x = data(:,1);
             
             for v = 1:length(vars)
-                data_struct(count).(vars{v}) = data(:,v+1);
+                if vars{v} == "water"
+                    continue
+                end
+		data_struct(count).(vars{v}) = data(:,v+1);
             end
 
             count = count + 1;
