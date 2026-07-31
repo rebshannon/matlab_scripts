@@ -19,10 +19,10 @@
 
 % Choose case
 caseName = 'DOD_compare';%oneWave_airToWater';
-caseLoc = 'hybridSolvers/vofTwoPhaseCentralFoam/dataFromDOD/vofDS6/ico_R0/';
+caseLoc = 'vofFoam/shockTube/sod10/vofFoam/';
 
 % move to dir
-cd(strcat('/projectnb/aeracous/REBECCA/',caseLoc,'singleGraph'));
+cd(strcat('/p/home/rebshan/',caseLoc,'postProcessing/singleGraph'));
 
 % Get list of all directories in current folder
 current_dir = pwd;
@@ -35,6 +35,7 @@ dirs = dir_contents([dir_contents.isdir] & ~ismember({dir_contents.name}, {'.', 
 % Initialize struct array to store data
 data_struct = struct('time', {});
 count = 1;
+var_ind = 1;
 
 %% READ ALL SINGLEGRAPH DATA
 % based on timesteps present in singleGraph dir
@@ -79,7 +80,8 @@ for i = 1:length(dirs)
                 if vars{v} == "water"
                     continue
                 end
-		data_struct(count).(vars{v}) = data(:,v+1);
+                var_ind = var_ind + 1;
+		        data_struct(count).(vars{v}) = data(:,var_ind);
             end
 
             count = count + 1;
@@ -98,5 +100,5 @@ fprintf('\n=== Summary ===\n');
 fprintf('Total timesteps found: %d\n', length([data_struct.time]));
 
 
-ico_R0 = data_struct;
-save('../../../../DS6_singleGraph.mat',"ico_R0",'-append')
+vofFoam = data_struct;
+save('../../../sod10_singleGraph.mat',"vofFoam",'-append')
