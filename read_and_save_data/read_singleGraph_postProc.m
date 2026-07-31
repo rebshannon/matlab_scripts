@@ -19,7 +19,11 @@
 
 % Choose case
 caseName = 'DOD_compare';%oneWave_airToWater';
+<<<<<<< HEAD
 caseLoc = 'vofFoam/shockTube/sod10/compInterPTFoam/';
+=======
+caseLoc = 'vofFoam/shockTube/sod10/vofFoam/';
+>>>>>>> narwhal
 
 % move to dir
 cd(strcat('/p/home/rebshan/',caseLoc,'postProcessing/singleGraph'));
@@ -100,5 +104,10 @@ fprintf('\n=== Summary ===\n');
 fprintf('Total timesteps found: %d\n', length([data_struct.time]));
 
 
+<<<<<<< HEAD
 cIPTFoam = data_struct;
 save('../../../sod10_singleGraph.mat',"cIPTFoam",'-append')
+=======
+vofFoam = data_struct;
+save('../../../sod10_singleGraph.mat',"vofFoam",'-append')
+>>>>>>> narwhal
