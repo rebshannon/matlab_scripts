@@ -6,34 +6,32 @@
 
 
 %cd('/projectnb/aeracous/REBECCA/solver_mod_testing/dwoTube_solverComp/fieldRel');
+startDir = '/p/home/rebshan/vofFoam';
 
 resVars = ["T","p_rgh"];
-caseName = "dwoTube";
+caseName = "shockTube/sod10";
+caseList = {'compInterPTFoam','vofFoam','limVofFoam'};
 figure
-t = tiledlayout(2,1);
+t = tiledlayout(length(resVars),1);
 for var = 1:length(resVars)
-    M = readmatrix(sprintf('interTwoPhaseCentralFoam/%s/logs/%s_all',caseName,resVars(var)),"FileType",'text');
-    N = reshape(M',[],1);
-    % plot initial resids
-
-    M2 = readmatrix(sprintf('vofTwoPhaseCentralFoam/%s/logs/%s_all',caseName,resVars(var)),"FileType",'text');
-    N2 = reshape(M2',[],1);
     
-    % for n = 1:2:size(M,2) 
-    %     semilogy(M(:,n))
-    %     hold on
-    % 
-    % end
     nexttile
-    plot(N,'-*')
-    hold on
-    plot(N2,'-*')
+    for CID = 1:length(caseList)
+        
+        clear M N
+        M = readmatrix(sprintf('%s/%s/%s/logs/%s_all',startDir,caseName,caseList{CID},resVars(var)),"FileType",'text');
+        N = reshape(M',[],1);
+    % plot initial resids
+   
+        plot(N,'-*')
+        hold on
+    end
+
     xlim([4, 18])
-    legend('inter','vof')
     title(sprintf('initial residuals for %s',resVars(var)))
     set(gca,"YScale",'log')
     grid on
-    xticks([6,9,12,15,18])
+    %xticks([6,9,12,15,18])
     xlabel('iteration number')
 
     % plot final resids
@@ -54,7 +52,8 @@ for var = 1:length(resVars)
     % legend
     % title(sprintf('init residuals for /%s',resVars(var)))
 
-    clear M M2
+ 
 end
 
 title(t,strcat(caseName,', outer 3, inner 1'))
+legend(caseList,'location','southoutside','NumColumns',length(caseList))
