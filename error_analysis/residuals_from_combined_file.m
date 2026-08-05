@@ -9,8 +9,8 @@
 startDir = '/p/home/rebshan/vofFoam';
 
 resVars = ["T","p_rgh"];
-caseName = "shockTube/sod10";
-caseList = {'compInterPTFoam','vofFoam','limVofFoam'};
+caseName = "shockTube/sod100";
+caseList = {'compInterPTFoam','vofFoam','scc_CIPT'};
 figure
 t = tiledlayout(length(resVars),1);
 for var = 1:length(resVars)
