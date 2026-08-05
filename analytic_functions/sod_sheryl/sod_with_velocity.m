@@ -39,9 +39,9 @@ cR = sqrt(gamma * p_R/rho_R);
 cL = sqrt(gamma* p_L/rho_L);
 
 % initialize variables
-u = zeros(n);
-p = zeros(n);
-rho = zeros(n);
+u = zeros(1,n);
+p = zeros(1,n);
+rho = zeros(1,n);
 
 %% Pressure in Region 2 - interative solve
 % contact discontinuity -> shock
