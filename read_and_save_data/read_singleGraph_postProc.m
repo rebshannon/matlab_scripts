@@ -19,7 +19,7 @@
 
 % Choose case
 caseName = 'DOD_compare';%oneWave_airToWater';
-caseLoc = 'vofFoam/shockTube/sod100_velocity/compInterPTFoam/';
+caseLoc = 'vofFoam/shockTube/sembLike/editFoam/';
 
 % move to dir
 cd(strcat('/p/home/rebshan/',caseLoc,'postProcessing/singleGraph'));
@@ -35,7 +35,7 @@ dirs = dir_contents([dir_contents.isdir] & ~ismember({dir_contents.name}, {'.', 
 % Initialize struct array to store data
 data_struct = struct('time', {});
 count = 1;
-var_ind = 1;
+
 
 %% READ ALL SINGLEGRAPH DATA
 % based on timesteps present in singleGraph dir
@@ -76,12 +76,13 @@ for i = 1:length(dirs)
             data_struct(count).time = time;
             data_struct(count).x = data(:,1);
             
+            var_ind = 1;
             for v = 1:length(vars)
                 if vars{v} == "water"
                     continue
                 end
                 var_ind = var_ind + 1;
-		        data_struct(count).(vars{v}) = data(:,var_ind);
+                data_struct(count).(vars{v}) = data(:,var_ind);
             end
 
             count = count + 1;
@@ -100,6 +101,6 @@ fprintf('\n=== Summary ===\n');
 fprintf('Total timesteps found: %d\n', length([data_struct.time]));
 
 
-cIPTFoam = data_struct;
-save('../../../sod100vel_singleGraph.mat','cIPTFoam','-append')
+editVofFoam = data_struct;
+save('../../../semb_singleGraph.mat','editVofFoam','-append')
 
