@@ -1,20 +1,23 @@
-%sod analytic 
+%% REBECCA SHANNON
+% 8/5/2026
+% Sod shock tube solver with initial velocity
+% source: pg 208 of https://soaneemrana.org/onewebmedia/NUMERICAL%20COMPUTATION%20OF%20INTERNAL%20&%20EXTERNAL%20FLOWS%20BY%20C.%20HIRSEH%20%28VOL.-2%29.pdf
 
 %% INITIAL CONDITIONS
 
 p_L = 1e5;
 rho_L = 1;
-u_L = 100;
+u_L = 50;
 
-p_R = 1.0e4;
-rho_R = 0.125;
-u_R = 0;
+p_R = 1.0e3;
+rho_R = 0.01;
+u_R = 100;
 
 % location of discontinuity at t = 0
 xi = 5;
 
 % time at which solution is desired
-t = 0.0061;  %6.1ms
+t = 0.0029;
 
 %% GEOMETRY
 
