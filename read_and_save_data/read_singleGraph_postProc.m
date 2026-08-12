@@ -19,10 +19,10 @@
 
 % Choose case
 caseName = 'DOD_compare';%oneWave_airToWater';
-caseLoc = 'vofFoam/shockTube/sembLike/editFoam/';
+caseLoc = 'hybridSolvers/vof_singleWave/compInter/airToWater/';
 
 % move to dir
-cd(strcat('/p/home/rebshan/',caseLoc,'postProcessing/singleGraph'));
+cd(strcat('/projectnb/aeracous/REBECCA/',caseLoc,'postProcessing/singleGraph'));
 
 % Get list of all directories in current folder
 current_dir = pwd;
@@ -35,7 +35,6 @@ dirs = dir_contents([dir_contents.isdir] & ~ismember({dir_contents.name}, {'.', 
 % Initialize struct array to store data
 data_struct = struct('time', {});
 count = 1;
-
 
 %% READ ALL SINGLEGRAPH DATA
 % based on timesteps present in singleGraph dir
