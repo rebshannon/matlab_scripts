@@ -4,6 +4,8 @@
 % move to postProcessing directory of interst
 % read Sembian probe data and average per timesteptStart = 0
 
+clear
+
 tStart = 0;
 tEnd = 239;
 
@@ -23,13 +25,13 @@ for probe = 1:3
 
     for time = tStart:numSteps-1
         fName = strcat('probe',num2str(probe),'_allPoints_',num2str(time),'.csv');
-        M = readmatrix(fName);
-        pres = mean(M(:,2));
-        tmp(probe).p(time + 1) = pres;
+        M = readtable(fName);
+        tmp(probe).p(time + 1) = mean(M.p);
+        tmp(probe).time(time + 1) = M.Time(2);
     end
 
     cd ..
 end
 
-tait = tmp;
-assignin('base',caseID,tmp)
+assignin('base',solver,tmp)
+save('~/vofFoam/semb_kraposhinIC/new_avg_probes.mat',solver,'-append')

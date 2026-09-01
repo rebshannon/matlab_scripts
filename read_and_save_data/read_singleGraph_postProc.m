@@ -19,10 +19,11 @@
 
 % Choose case
 caseName = 'DOD_compare';%oneWave_airToWater';
-caseLoc = 'hybridSolvers/vof_singleWave/compInter/airToWater/';
+caseID = 'highA_waterToAir';
+caseLoc = strcat('vofFoam/oneWave/vof/',caseID,'/');
 
 % move to dir
-cd(strcat('/projectnb/aeracous/REBECCA/',caseLoc,'postProcessing/singleGraph'));
+cd(strcat('/p/home/rebshan/',caseLoc,'postProcessing/singleGraph'));
 
 % Get list of all directories in current folder
 current_dir = pwd;
@@ -100,6 +101,6 @@ fprintf('\n=== Summary ===\n');
 fprintf('Total timesteps found: %d\n', length([data_struct.time]));
 
 
-editVofFoam = data_struct;
-save('../../../semb_singleGraph.mat','editVofFoam','-append')
+assignin('base',caseID, data_struct)
+save('../../../vof_singleGraph.mat',caseID,'-append')
 
