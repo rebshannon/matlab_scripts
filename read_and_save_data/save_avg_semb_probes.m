@@ -8,8 +8,11 @@ tStart = 0;
 tEnd = 239;
 
 DODHOME = '/p/work1/rebshan/';
-caseDir = 'sembcomp.NARWHAL/postProcessing';
+SCCHOME = '/projectnb/aeracous/REBECCA/';
 
+caseID = 'comp';
+
+caseDir = strcat('semb',caseID','.NARWHAL/postProcessing');
 cd(strcat(DODHOME,caseDir));
 
 
@@ -29,3 +32,4 @@ for probe = 1:3
 end
 
 tait = tmp;
+assignin('base',caseID,tmp)
