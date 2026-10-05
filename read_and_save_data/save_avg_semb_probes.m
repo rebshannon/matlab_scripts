@@ -7,14 +7,13 @@
 clear
 
 tStart = 0;
-tEnd = 239;
 
 DODHOME = '/p/work1/rebshan/';
-SCCHOME = '/projectnb/aeracous/REBECCA/';
+%SCCHOME = '/projectnb/aeracous/REBECCA/';
 
-caseID = 'comp';
+caseID = 'PISO';
 
-caseDir = strcat('semb',caseID','.NARWHAL/postProcessing');
+caseDir = strcat('semb_',caseID,'.NARWHAL/postProcessing');
 cd(strcat(DODHOME,caseDir));
 
 
@@ -33,5 +32,5 @@ for probe = 1:3
     cd ..
 end
 
-assignin('base',solver,tmp)
-save('~/vofFoam/semb_kraposhinIC/new_avg_probes.mat',solver,'-append')
+assignin('base',caseID,tmp)
+save('~/vofFoam/semb_kraposhinIC/new_avg_probes.mat',caseID,'-append')
