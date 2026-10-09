@@ -7,6 +7,8 @@
 % Set case Dir, caseID, and choose SCC or DOD home
 % Choose where to save
 
+clear
+
 %% INITIAL SETTINGS
 
 DODHOME = '/p/work1/rebshan/';
@@ -14,7 +16,7 @@ SCCHOME = '/projectnb/aeracous/REBECCA/';
 
 % Choose case
 caseDir = 'hybridSolvers/vof_DS6/';
-caseID = 'comp';
+caseID = 'fixed';
 
 fullCase = strcat(SCCHOME,caseDir,caseID,'/probeDat');  
 cd(fullCase);
@@ -42,7 +44,7 @@ for i = 1:length(dirs)
         % probe loop
         for probe = 1:size(M,2)-1
         
-            if i == 1
+            if i == 1 && var == 1
                 tmp(probe).time = M(:,1);
             end
             
@@ -57,7 +59,7 @@ end
 %% SAVE 
 
 assignin('base',caseID,tmp)
-save(saveTo, caseID)%,'-append')
+save(saveTo, caseID,'-append')
 
 
 
