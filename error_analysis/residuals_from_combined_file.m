@@ -5,12 +5,11 @@
 % file for each variable
 
 
-%cd('/projectnb/aeracous/REBECCA/solver_mod_testing/dwoTube_solverComp/fieldRel');
-startDir = '/p/home/rebshan/vofFoam';
+startDir = '/p/home/rebshan/limTaitPisoTesting';
 
 resVars = ["T","p_rgh"];
-caseName = "shockTube/sod100";
-caseList = {'compInterPTFoam','vofFoam','scc_CIPT'};
+caseName = "";
+caseList = {'sod100'};%{'compInterPTFoam','vofFoam','scc_CIPT'};
 figure
 t = tiledlayout(length(resVars),1);
 for var = 1:length(resVars)
