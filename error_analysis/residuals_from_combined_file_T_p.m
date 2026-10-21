@@ -23,7 +23,7 @@ p_plot = reshape(p',[],1);
 T_count = linspace(1,size(T,1),size(T_plot,1));
 p_count = linspace(1,size(p,1),size(p_plot,1));
 
-% figure
+figure(4)
 % t = tiledlayout(length(resVars),1);
 % ax1 = nexttile;
 % ax2 = nexttile;
@@ -32,10 +32,10 @@ nexttile(1)
 hold(ax1,'on')
 plot(T_count,T_plot,'-*');
 
-xlim([10 20])
+xlim([200 205])
 title(sprintf('initial residuals for T'))
 set(gca,"YScale",'log')
-xticks([10:20])
+xticks([200:205])
 grid on
 xlabel('timestep number')
 
@@ -43,11 +43,11 @@ nexttile(2)
 hold(ax2,'on')
 plot(p_count,p_plot,'-*');
 
-xlim([10 20])
+xlim([200 205])
 title(sprintf('initial residuals for p'))
 set(gca,"YScale",'log')
 grid on
-xticks([10:20])
+xticks([200:205])
 xlabel('timestep number')
 
 
