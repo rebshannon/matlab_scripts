@@ -8,29 +8,41 @@ clear
 
 tStart = 0;
 
-DODHOME = '/p/work1/rebshan/';
+HOME = '/p/work1/rebshan/';
 %SCCHOME = '/projectnb/aeracous/REBECCA/';
 
-caseID = 'PISO';
+caseList = {'3O1I','3O3I','6O1I','fixed'};
+caseNameList = {'O3I1','O3I3','O6I1','fixed'};
 
-caseDir = strcat('semb_',caseID,'.NARWHAL/postProcessing');
-cd(strcat(DODHOME,caseDir));
+saveTo = '~/vofFoam/semb_kraposhinIC/pisoStudy.mat';
 
+for caseID = 1:length(caseList)
 
-for probe = 1:3
+    caseDir = strcat('semb_',caseList{caseID},'/postProcessing');
+    caseName = caseNameList{caseID};
 
-    cd(strcat('probe',num2str(probe)))
-    numSteps = length(dir(fullfile('.','*.csv')));
-
-    for time = tStart:numSteps-1
-        fName = strcat('probe',num2str(probe),'_allPoints_',num2str(time),'.csv');
-        M = readtable(fName);
-        tmp(probe).p(time + 1) = mean(M.p);
-        tmp(probe).time(time + 1) = M.Time(2);
+    cd(strcat(HOME,caseDir));
+    
+    for probe = 1:3
+    
+        cd(strcat('probe',num2str(probe)))
+        numSteps = length(dir(fullfile('.','*.csv')));
+    
+        for time = tStart:numSteps-1
+            fName = strcat('probe',num2str(probe),'_allPoints_',num2str(time),'.csv');
+            M = readtable(fName);
+            tmp(probe).p(time + 1) = mean(M.p);
+            tmp(probe).time(time + 1) = M.Time(2);
+        end
+    
+        cd ..
     end
+    
+    assignin('base',caseName,tmp)
 
-    cd ..
+    if isfile(saveTo)
+        save(saveTo,caseName,'-append')
+    else
+        save(saveTo,caseName)
+    end
 end
-
-assignin('base',caseID,tmp)
-save('~/vofFoam/semb_kraposhinIC/new_avg_probes.mat',caseID,'-append')
