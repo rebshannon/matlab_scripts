@@ -5,124 +5,113 @@
 
 %% SET UP
 
-caseName = 'benchmarks/AIAA-shot6/OpenFOAM';
-tStep = 1e-7;
-tStart = 0;
-tEnd = 3e-5;
+% Choose case
+caseHome = '/p/work1/rebshan/';
+caseName = '2D_DS6';
+caseID = 'cpd400_2D_surf'; % for saving
+alphaList = {'01','99'};
 
-cd(strcat('/projectnb/aeracous/REBECCA/',caseName))
-cd './postProcessing/surfaces'
+saveTo = '~/official_vof_cases/DS6_verif/DS6_verif.mat';
 
-if tStart == 0
-    P = readmatrix('0/p_freeSurf.raw','FileType','text');
-    U = readmatrix('0/U_freeSurf.raw','FileType','text');
-else
-    P = readmatrix(strcat(num2str(tStart),'/p_freeSurf.raw','FileType','text'));
-    U = readmatrix(strcat(num2str(tStart),'/U_freeSurf.raw','FileType','text'));
-end
 
-% % initialize
-% p = zeros(round((tEnd-tStart)/tStep+1),size(P,1));
-% Ux = zeros(round((tEnd-tStart)/tStep+1),size(U,1));
-% Uy = zeros(round((tEnd-tStart)/tStep+1),size(U,1));
-% Uz = zeros(round((tEnd-tStart)/tStep+1),size(U,1));
-% x = zeros(round((tEnd-tStart)/tStep+1),size(U,1));
-% y = zeros(round((tEnd-tStart)/tStep+1),size(U,1));
-% z = zeros(round((tEnd-tStart)/tStep+1),size(U,1));
-timeInt = tStart:tStep:tEnd;
+for a = 1:length(alphaList)
 
-% extract data for t0
-colNum = 1;
-myStructure.p{colNum,:} = P(:,4);
-myStructure.Ux{colNum,:} = U(:,4);
-myStructure.Uy{colNum,:} = U(:,5);
-myStructure.Uz{colNum,:} = U(:,6);
-myStructure.x{colNum,:} = U(:,1);
-myStructure.y{colNum,:} = U(:,2);
-myStructure.z{colNum,:} = U(:,3);
+    alpha = alphaList{a};
 
-for t = timeInt
+    % move to dir
+    cd(strcat(caseHome,caseName,'/postProcessing/surface',alpha));
+    alpha = strcat('a',alphaList{a});
 
-    if t == tStart
-        continue
-    end
-
-    colNum = colNum + 1;
+    % Get list of all directories in current folder
+    current_dir = pwd;
+    dir_contents = dir(current_dir);
     
-    if t < 1e-6
-        P = readmatrix(sprintf('%.0e/p_freeSurf.raw',t),'FileType','text');
-        U = readmatrix(sprintf('%.0e/U_freeSurf.raw',t),'FileType','text'); 
-%        sprintf('%.0e',t)
-
-        myStructure.p{:,colNum} = P(:,4);
-        myStructure.Ux{colNum,:} = U(:,4);
-        myStructure.Uy{colNum,:} = U(:,5);
-        myStructure.Uz{colNum,:} = U(:,6);
-        myStructure.x{colNum,:} = U(:,1);
-        myStructure.y{colNum,:} = U(:,2);
-        myStructure.z{colNum,:} = U(:,3);
-
-    elseif t < 10e-6
-
-        if rem(t,1e-6) == 0
-            P = readmatrix(sprintf('%.0e/p_freeSurf.raw',t),'FileType','text');
-            U = readmatrix(sprintf('%.0e/U_freeSurf.raw',t),'FileType','text'); 
- %             sprintf('%.0e',t)
-        else 
-            P = readmatrix(sprintf('%.1e/p_freeSurf.raw',t),'FileType','text');
-            U = readmatrix(sprintf('%.1e/U_freeSurf.raw',t),'FileType','text'); 
-%              sprintf('%.1e',t)
+    % Filter for directories only (exclude '.' and '..')
+    dirs = dir_contents([dir_contents.isdir] & ~ismember({dir_contents.name}, {'.', '..'}));
+    
+    % Initialize storage for data
+    % Initialize struct array to store data
+    data_struct.(alpha) = struct('time', []);
+    count = 1;
+    
+    %% READ ALL SURFACE DATA
+    % based on timesteps present in singleGraph dir
+    
+    % read first matrix
+    
+    for i = 1:length(dirs)
+        
+        dir_name = dirs(i).name;
+        dir_path = fullfile(current_dir,dir_name);
+        
+        % Try to convert directory name to number (timestep)
+        time = str2double(dir_name);
+        
+        % Skip if directory name is not a valid number
+        if isnan(time)
+            continue;
         end
-
-        myStructure.p{:,colNum} = P(:,4);
-        myStructure.Ux{colNum,:} = U(:,4);
-        myStructure.Uy{colNum,:} = U(:,5);
-        myStructure.Uz{colNum,:} = U(:,6);
-        myStructure.x{colNum,:} = U(:,1);
-        myStructure.y{colNum,:} = U(:,2);
-        myStructure.z{colNum,:} = U(:,3);
-       
-    elseif t < 100e-6
-
-        if rem(round(t,8),10e-6) == 0
-            P = readmatrix(sprintf('%.0e/p_freeSurf.raw',t),'FileType','text');
-            U = readmatrix(sprintf('%.0e/U_freeSurf.raw',t),'FileType','text'); 
-
-%             sprintf('%.0e',t)
-        elseif rem(round(t,8),1e-6)==0
-            P = readmatrix(sprintf('%.1e/p_freeSurf.raw',t),'FileType','text');
-            U = readmatrix(sprintf('%.1e/U_freeSurf.raw',t),'FileType','text'); 
-
-%             sprintf('%.1e',t)
-        else
-            P = readmatrix(sprintf('%.2e/p_freeSurf.raw',t),'FileType','text');
-            U = readmatrix(sprintf('%.2e/U_freeSurf.raw',t),'FileType','text'); 
-
-%             sprintf('%.2e',t)
+        
+        % List files
+        files = dir(fullfile(dir_path, '*'));
+        files = files(~[files.isdir]);
+    
+        fprintf('Processing directory: %s (t = %e)\n', dir_name, time);
+    
+        % Read data from each file in this timestep directory
+        for j = 1:length(files)
+            try
+                fName = files(j).name;
+                file_path = fullfile(dir_path, fName);
+    
+                % get names of the variable printed
+                var = split(fName,["_"]);
+                var = var{1};
+                
+                data = readmatrix(file_path, 'FileType','text');
+                
+                if j == 1
+                
+                    % read time, x,y,z
+                    data_struct.(alpha)(i).time = time;
+                    data_struct.(alpha)(i).x = data(:,1);
+                    data_struct.(alpha)(i).y  = data(:,2);
+                    data_struct.(alpha)(i).z  = data(:,3);
+    
+                end
+    
+                if var == 'p'
+                    % read pressure
+                    data_struct.(alpha)(i).p = data(:,4);
+                elseif var == 'U'
+                    % read velocity
+                    data_struct.(alpha)(i).Ux = data(:,4);
+                    data_struct.(alpha)(i).Uy = data(:,5);
+                    data_struct.(alpha)(i).Uz = data(:,6);
+                else
+                    % if I add another scalar
+                    data_struct.(alpha).(var) = data(:,4);
+                end
+    
+            catch
+                % Skip files that can't be read
+            end
         end
-        myStructure.p{:,colNum} = P(:,4);
-        myStructure.Ux{colNum,:} = U(:,4);
-        myStructure.Uy{colNum,:} = U(:,5);
-        myStructure.Uz{colNum,:} = U(:,6);
-        myStructure.x{colNum,:} = U(:,1);
-        myStructure.y{colNum,:} = U(:,2);
-        myStructure.z{colNum,:} = U(:,3);
-
-    else
-        t_strip = strip(num2str(t),'right','0');
-        P = readmatrix(strcat(t_strip,'/p_freeSurf.raw'),'FileType','text');
-        U = readmatrix(strcat(t_strip,'/U_freeSurf.raw'),'FileType','text'); 
-
-        myStructure.p{:,colNum} = P(:,4);
-        myStructure.Ux{colNum,:} = U(:,4);
-        myStructure.Uy{colNum,:} = U(:,5);
-        myStructure.Uz{colNum,:} = U(:,6);
-        myStructure.x{colNum,:} = U(:,1);
-        myStructure.y{colNum,:} = U(:,2);
-        myStructure.z{colNum,:} = U(:,3);
-
     end
-
+    
+    % Sort by timestep
+    % [sorted_timesteps, idx] = sort([data_struct.time]);
+    % data_struct = data_struct(idx);
+    
+    
+    fprintf('\n=== Summary ===\n');
+    fprintf('Total timesteps found: %d\n', length([data_struct(alpha).time]));
 end
 
-myStructure.time=transpose(timeInt);
+assignin('base',caseID,data_struct)
+
+if isfile(saveTo)
+    save(saveTo,caseID,'-append')
+else
+    save(saveTo,caseID)
+end

@@ -19,8 +19,8 @@
 
 % Choose case
 caseHome = '/p/work1/rebshan/';
-caseName = '2D_DS6_smallTest';
-caseID = 'cpd400_small_2D'; % for saving
+caseName = ['2D_DS61000'];
+caseID = 'cpd1000_2D'; % for saving
 
 saveTo = '~/official_vof_cases/DS6_verif/DS6_verif.mat';
 
