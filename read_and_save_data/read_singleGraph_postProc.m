@@ -18,12 +18,14 @@
 %% INITIAL SETTINGS
 
 % Choose case
-caseName = 'DOD_compare';%oneWave_airToWater';
-caseID = 'highA_waterToAir';
-caseLoc = strcat('vofFoam/oneWave/vof/',caseID,'/');
+caseHome = '/p/work1/rebshan/';
+caseName = '2D_DS6_smallTest';
+caseID = 'cpd400_small_2D'; % for saving
+
+saveTo = '~/official_vof_cases/DS6_verif/DS6_verif.mat';
 
 % move to dir
-cd(strcat('/p/home/rebshan/',caseLoc,'postProcessing/singleGraph'));
+cd(strcat(caseHome,caseName,'/postProcessing/singleGraph'));
 
 % Get list of all directories in current folder
 current_dir = pwd;
@@ -97,10 +99,29 @@ end
 [sorted_timesteps, idx] = sort([data_struct.time]);
 data_struct = data_struct(idx);
 
+% combine to matrices
+fields = fieldnames(data_struct);
+for f = 1:length(fields)
+    if fields{f} == 'x'
+        tmp.x = data_struct(1).x;
+    else
+        tmp.(fields{f}) = [data_struct.(fields{f})];
+    end
+end
+
 fprintf('\n=== Summary ===\n');
 fprintf('Total timesteps found: %d\n', length([data_struct.time]));
 
+separateSave = strcat('sep_',caseID);
+matrixSave = strcat('mat_',caseID);
 
-assignin('base',caseID, data_struct)
-save('../../../vof_singleGraph.mat',caseID,'-append')
+assignin('base',separateSave, data_struct)
+assignin('base',matrixSave, tmp)
+
+
+if isfile(saveTo)
+    save(saveTo,separateSave,matrixSave,'-append')
+else
+    save(saveTo,separateSave,matrixSave)
+end
 

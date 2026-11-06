@@ -1,4 +1,4 @@
 *.asv
-.out
-.err
-.slurmjb
+*.out
+*.err
+*.slurmjb
