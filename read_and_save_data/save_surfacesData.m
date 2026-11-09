@@ -7,8 +7,8 @@
 
 % Choose case
 caseHome = '/p/work1/rebshan/';
-caseName = '2D_DS6';
-caseID = 'cpd400_2D_surf'; % for saving
+caseName = '2D_DS6_smallTest';
+caseID = 'surf_cpd400_small_2D'; % for saving
 alphaList = {'01','99'};
 
 saveTo = '~/official_vof_cases/DS6_verif/DS6_verif.mat';
@@ -100,12 +100,13 @@ for a = 1:length(alphaList)
     end
     
     % Sort by timestep
-    % [sorted_timesteps, idx] = sort([data_struct.time]);
-    % data_struct = data_struct(idx);
+    [sorted_timesteps, idx] = sort([data_struct.(alpha).time]);
+    data_struct.(alpha) = data_struct.(alpha)(idx);
     
     
     fprintf('\n=== Summary ===\n');
-    fprintf('Total timesteps found: %d\n', length([data_struct(alpha).time]));
+    fprintf('For alpha = %s\n',alpha);
+    fprintf('Total timesteps found: %d\n', length([data_struct.(alpha).time]));
 end
 
 assignin('base',caseID,data_struct)
